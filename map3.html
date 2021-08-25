@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Kakao 지도 시작하기</title>
+</head>
+<body>
+<style>
+  .map {
+    width:100vw;
+    height: 50vh;
+  }
+</style>
+
+<div id="map" class="map"></div>
+
+<style>
+  .list {
+    list-style: none;
+  }
+  .category {
+    display: flex;
+  }
+  .category div {
+    margin: 2em;
+    color: white;
+    background-color: green;
+    border: 1px solid blue;
+  }
+</style>
+
+<div class="container">
+  <div class="category">
+    <div><a href="" onclick="setCategory(event, 'ALL')" >전체</a></div> //href="" 마우스 커서 손가락 준다. 누르는 느낌^^
+    <div><a href="" onclick="setCategory(event, '한식')" >한식</a></div>
+    <div><a href="" onclick="setCategory(event, '분식')" >분식</a></div>
+    <div><a href="" onclick="setCategory(event, '일식')" >일식</a></div>
+  </div>
+  <ul class="list">
+
+  </ul>
+</div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=529878b3c426e52fa3c2c6977f703f27"></script>
+<script>
+  const container = document.getElementById('map');
+  const options = {  //객체 리터럴
+    center: new kakao.maps.LatLng(37.5785676,126.9756556), //center는 지도상 기준점.
+    level: 3 //지도의 크기 커질수록 지도가 작게 보인다
+  };
+
+  const map = new kakao.maps.Map(container, options);
+</script>
+
+<script>
+
+  const stores = [
+    {sno:1, name:'무교동북어국집', lat:37.5677429, lng:126.9776194, menus:'북어국', cat:'한식'},
+    {sno:2, name:'오카구라', lat:37.5698057, lng:126.9900538, menus:'라멘', cat:'일식' },
+    {sno:3, name:'이경문순대곱창', lat:37.5730402, lng:126.9886041, menus:'순대국', cat:'한식'},
+    {sno:4, name:'동경우동(가짜)', lat:37.5655745, lng:126.9879135, menus:'우동', cat:'분식'},
+    {sno:5, name:'먹쉬돈나', lat:37.5748621, lng:126.9769802, menus:'떡볶이', cat:'분식'},
+
+  ]
+
+  const listUL = document.querySelector(".list")  // 리스트로 만들어주려고 쿼리 가져옴ㄴ
+
+  function makeList(arr){
+    let str ="";
+
+    for(let i = 0; i < arr.length; i++){
+      const {sno, name, lat, lng, menus} = arr[i]
+
+      str += `<li data-sno="${sno}" onclick="panTo(${lat}, ${lng}, '${name}', '${menus}', ${sno})">${sno} ${name} ${menus}</li>`
+    }
+    listUL.innerHTML = str
+
+  }
+
+  makeList(stores) // 함수는 기능만하고. 사용하려면 호출을 해야함.
+
+
+  let infowindow = null
+
+  function panTo(lat,lng,name,menus,sno ) {
+
+    if(infowindow){
+      infowindow.close()
+    }
+
+    // 이동할 위도 경도 위치를 생성합니다
+    var moveLatLon = new kakao.maps.LatLng(lat, lng);
+
+    var iwContent = `<div style="padding:5px;">${name}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+            iwPosition = moveLatLon, //인포윈도우 표시 위치입니다
+            iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+// 인포윈도우를 생성하고 지도에 표시합니다
+    infowindow = new kakao.maps.InfoWindow({
+      map: map, // 인포윈도우가 표시될 지도
+      position : iwPosition,
+      content : iwContent,
+      removable : iwRemoveable
+    });
+
+    // 지도 중심을 부드럽게 이동시킵니다
+    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    map.panTo(moveLatLon);
+  }
+</script>
+
+<script>
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      //비동기 함수 - 위치 값을 얻으면 showPosition해줘
+      navigator.geolocation.getCurrentPosition(showPosition); //getCurrentPosition 현재위치를 알려주는 함수
+    }
+  }
+
+  function showPosition(position) {
+    const lat = position.coords.latitude
+    const lng = position.coords.longitude
+
+    //alert("현재 위치로 이동합니다.")
+
+    setTimeout(function (){
+      const center = new kakao.maps.LatLng(lat, lng);
+      map.panTo(center)
+    }, 1000)
+  }
+  getLocation()
+
+</script>
+
+<script>
+  function setCategory(e, category){
+    e.preventDefault()
+    e.stopPropagation()
+
+    //alert(category)
+
+    const filteredStores = stores.filter(store => {
+      if(category === 'ALL'){
+        return true
+      }
+      return store.cat === category
+    })
+
+    console.log(filteredStores)
+
+    makeList(filteredStores)
+
+
+  }
+
+</script>
+
+</body>
+</html>

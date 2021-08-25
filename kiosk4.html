@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<ul class="menus">
+
+</ul>
+
+<div>
+    <ul class="cart">
+
+    </ul>
+    <h3 class="total"></h3>
+</div>
+
+<script>
+
+    const menus = [
+        {name:'빅맥', price: 5000},
+        {name:'상하이버거', price: 5500},
+        {name:'불고기버거', price: 4500},
+        {name:'더블치즈버거', price: 5500},
+    ]
+
+    const cart = []
+
+    const menusDiv = document.querySelector(".menus")
+    const cartDiv = document.querySelector(".cart")
+
+    let str = "";
+    for(let i = 0; i < menus.length; i++){
+
+        const name = menus[i].name
+        const price = menus[i].price
+
+        str += `<li data-idx="${i}" data-name="${name}" data-price="${price}">${name}<span>${price}</span></li>`
+    }  // 값이 여러개 쌓인다. list로 만들어짐.
+    //li 는 list를 만드는 기능인데 li이 자체가 데이터를 가질 수 있게 한다 -> data-idx="${i}"
+    menusDiv.innerHTML = str
+
+    //menusDiv 틀에 str로 선언 값을 innerHTML html로 변환해서 넣어준다.
+
+    //이벤트 처리
+    document.querySelector(".menus").addEventListener("click", function(e){
+
+        const targetLi = e.target; // target 이벤트가 걸려있는 대상
+
+        const idx = targetLi.getAttribute("data-idx")
+
+        if(idx){
+            console.log(idx)
+            refreshCart(menus[idx])
+
+        }
+    },false) // 캡쳐링 ㄴㄴ false
+
+
+
+    function refreshCart(menu){ //카트에 있는 내용물을 화면에 출력해주는 역할
+        if (menu){
+            cart.push(menu)
+        }  // 값을 실질적으로 밀어줌
+        //cart ul 갱신
+        let str ="";
+        for(let i = 0; i < cart.length; i++){
+            const name = cart[i].name
+            const price = cart[i].price
+            str += `<li>${name} - ${price}<buttun data-idx="${i}">X</buttun></li>`//버튼이 인덱스 값을 가지게 만들어줌.
+        }
+        cartDiv.innerHTML = str
+
+
+    }
+
+    cartDiv.addEventListener("click", function (e){
+
+        const target = e.target // 이벤트를 지정한 대상
+
+        if(target.matches("button")){
+            const idx = target.getAttribute("data-idx") //data-idx를 가져와서 idx에 넣어준다.
+            console.log(idx)
+
+            cart.splice(idx,1)
+
+            refreshCart() //자바스크립트는 파라미터의 값이 맞지않아도 호출
+            //파라미터 없이 선언이 되면 if문을 제외하고 실행
+
+        }
+    }), false
+
+
+
+</script>
+
+</body>
+</html>

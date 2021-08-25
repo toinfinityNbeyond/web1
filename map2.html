@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Kakao 지도 시작하기</title>
+</head>
+<body>
+<style>
+  .map {
+    width:100vw;
+    height: 50vh;
+  }
+</style>
+
+<div id="map" class="map"></div>
+
+<style>
+  .list {
+    list-style: none;
+  }
+</style>
+
+<div class="container">
+  <ul class="list">
+
+  </ul>
+</div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=529878b3c426e52fa3c2c6977f703f27"></script>
+<script>
+  const container = document.getElementById('map');
+  const options = { //객체 리터럴
+    center: new kakao.maps.LatLng(37.5703794,126.9858001),
+    level: 3 //지도의 크기 커질수록 지도가 작게 보인다
+  };
+
+  const map = new kakao.maps.Map(container, options);
+</script>
+
+<script>
+
+  const stores = [
+    {sno:1, name:'무교동북어국집', lat:37.5677429, lng:126.9776194, menus:'북어국'},
+    {sno:2, name:'오카구라', lat:37.5698057, lng:126.9900538, menus:'라멘'}
+  ]
+
+  const listUL = document.querySelector(".list")
+
+  function makeList(arr){ // 지도 밑에 텍스트로 리스트 나오게 하는거
+    let str ="";
+
+    for(let i = 0; i < arr.length; i++){
+      const {sno, name, lat, lng, menus} = arr[i] //구조분해할당
+
+      str += `<li data-sno="${sno}" onclick="panTo(${lat}, ${lng}, '${name}', '${menus}', ${sno})">${sno} ${name} ${menus}</li>`
+    } // 클릭을 하면 panTo라는 기능이 동작하는데 li가 값을 가지고 있어야 작동을 한다 -> 파라미터로 값을 줬다.
+    // <li data-sno="${sno}" 최종 목적지.   onclick="panTo(${lat}, ${lng}, '${name}', '${menus}', ${sno})"  <- 기능
+    listUL.innerHTML = str
+
+  }
+
+  makeList(stores)
+
+
+  let infowindow = null
+
+  function panTo(lat,lng,name,menus,sno ) {
+
+    if(infowindow){
+      infowindow.close()
+    }
+
+    // 이동할 위도 경도 위치를 생성합니다
+    var moveLatLon = new kakao.maps.LatLng(lat, lng);
+
+    var iwContent = `<div style="padding:5px;">${name}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+            iwPosition = moveLatLon, //인포윈도우 표시 위치입니다
+            iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+// 인포윈도우를 생성하고 지도에 표시합니다
+    infowindow = new kakao.maps.InfoWindow({
+      map: map, // 인포윈도우가 표시될 지도
+      position : iwPosition,
+      content : iwContent,
+      removable : iwRemoveable
+    });
+
+    // 지도 중심을 부드럽게 이동시킵니다
+    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    map.panTo(moveLatLon);
+  }
+
+
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div>
+<ul class="items">
+    <li><div>빅맥</div></li>
+    <li><div>상하이버거</div></li>
+    <li><div>불고기버거</div></li>
+    <li><div>치즈버거</div></li>
+    <li><div>후렌치후라이</div></li>
+</ul>
+</div>
+
+<div>
+<ul class="cart">
+
+</ul>
+
+</div>
+
+<script>
+    var items = document.querySelectorAll(".items li div")  // div 태그에 이벤트를 걸고 싶으면 (".items li div") 선언
+
+    var cart = document.querySelector(".cart") // .은 클래스 #은 아이디
+
+    console.log(items)
+
+    for(var i=0; i< items.length; i++) {
+        items[i].addEventListener("click", (e)=> {
+          var target = e.target
+          var str = target.innerHTML
+          cart.innerHTML += "<li>"+str+"<button onclick='removeFn(event)'>X</button></li>"
+
+        } ,false)
+    }
+    //동적으로 만든애들은 이벤트가 안걸린다
+
+
+    function removeFn(event){
+        alert("AAA")
+        var target = event.target.parentNode //li
+        console.log(target)
+        cart.removeChild(target)
+
+    }
+
+</script>
+
+</body>
+</html>

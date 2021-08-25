@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<ul class="menus">
+
+</ul>
+
+<div>
+
+    <ul class="cart">
+
+    </ul>
+    <h3 class="total"></h3>
+</div>
+
+
+
+<script>
+
+    const menus = [
+        {name:'아메리카노',price: 4100},
+        {name:'라떼', price: 4400},
+        {name:'바닐라라떼', price: 4600 },
+        {name: '카라멜마끼아또',price: 4600}
+    ]
+
+    const cart = []
+
+    const menuDiv = document.querySelector(".menus")
+    const cartDiv = document.querySelector(".cart")
+
+    let str ="";
+    for (let i = 0;i < menus.length; i++){
+        const name = menus[i].name
+        const price = menus[i].price
+
+        str += `<li data-idx="${i}" data-name="${name}" data-price="${price}">${name}<span>${price}</span></li>`
+    }
+
+    menuDiv.innerHTML = str
+
+    document.querySelector(".menus").addEventListener("click",function (e){
+
+        const targetLi = e.target;
+
+        const idx = targetLi.setAttribute("data-idx")
+
+        if (idx){
+            console.log(idx)
+            refreshCart(menus)
+        }
+    },false)
+
+    function refreshCart(menu){
+        if (menu){
+            cart.push(menu)
+        }
+        let str = "";
+        for (let i = 0; i < cart.length; i++){
+            const name = cart[i].name
+            const price = cart[i].price
+            str += `<li>${name}-${price}<button data-idx="${i}">X</button></li>`
+        }
+        cartDiv.innerHTML = str
+    }
+
+    cartDiv.addEventListener("click", function (e){
+
+        const target = e.target
+
+        if (target.matches("button")){
+            const idx = target.getAttribute("data-idx")
+
+            console.log(idx)
+
+            cart.splice(idx,1)
+
+            refreshCart()
+        }
+    }), false
+
+</script>
+
+</body>
+</html>

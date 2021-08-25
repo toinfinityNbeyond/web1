@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<style>
+    .bg{
+        background-color: yellow;
+    }
+    .bgred{
+        background-color: red;
+        height: 50vh;
+    }
+
+</style>
+
+<button id="btn">CLICK</button>
+
+<div id="target" class="bg">
+    <h1>HELLO</h1>
+</div>
+
+<script>
+
+    var btn = document.querySelector("#btn")   //아이디는 #으로 찾는다
+    var target = document.querySelector("#target")
+
+    btn.addEventListener("click",function (){
+        console.log("btn click");
+        console.log(e)
+        target.setAttribute("class",bgred)
+
+    },false)
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button id="btn">CLICK</button>
+
+<script>
+
+
+    document.querySelector("#btn").addEventListener("click", function (){
+
+        //const result = fetch : 동기화방식(다 끝난 뒤에야 result에 값을 넣음, 언제 끝날지 모름)
+       fetch("https://swapi.dev/api/people/1").then(res => { //비동기 방식 : 다 끝나면 res를 콘솔창에 찍어라  //res = response
+           //const body = res.boby
+           //console.log(res.body)
+            res.json().then(data => { //URL 가져오는데 성공하면 json데이터를 가져와
+                console.log(data) //data를 콘솔에 찍어줘
+            })
+
+       }) //여기있는 데이터를 다 가져오고, 그 다음에는 console.log를 실행해줘
+        //동기화된 방식
+        // 이벤트는 비동기처리
+        //서버에서 통신한다는 얘기는 데이터를 만들어서 가져오지 않아도 된다.
+        //서버랑 통신을 해서 데이터를 주고 받을 수 있음.
+        //모바일에서도 가능
+        //서버가 없어서 fetch("https://swapi.dev/api/people/1")를 서버로 사용
+
+
+
+    },false)
+</script>
+</body>
+</html>
